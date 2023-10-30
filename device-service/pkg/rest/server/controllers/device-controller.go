@@ -90,3 +90,33 @@ func (deviceController *DeviceController) FetchDevice(context *gin.Context) {
 
 	context.JSON(http.StatusOK, device)
 }
+
+func (deviceController *DeviceController) UpdateDevice(context *gin.Context) {
+	// validate input
+	var input models.Device
+	if err := context.ShouldBindJSON(&input); err != nil {
+		log.Error(err)
+		context.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := strconv.ParseInt(context.Param("id"), 10, 64)
+	if err != nil {
+		log.Error(err)
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// trigger device update
+	if _, err := deviceController.deviceService.UpdateDevice(id, &input); err != nil {
+		log.Error(err)
+		if errors.Is(err, sqls.ErrNotExists) {
+			context.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusNoContent, gin.H{})
+}
