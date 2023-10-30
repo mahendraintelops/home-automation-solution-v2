@@ -7,7 +7,7 @@
 # Post
 ```
 curl -X POST -H "Content-Type: application/json" \
--d '{"Volume": 1,"Name": "sample string"}' \
+-d '{"Name": "sample string","Volume": 1}' \
 http://localhost:4550/v1/devices
 ```
 
@@ -22,14 +22,14 @@ http://localhost:4550/v1/devices
 # Put
 ```
 curl -X PUT -H "Content-Type: application/json" \
--d '{"Id": 123,"Name": "sample string","Volume": 1}' \
+-d '{"Id": 123,"Volume": 1,"Name": "sample string"}' \
 http://localhost:4550/v1/devices/123
 ```
 # Put
 ### wrong id passed in param
 ```
 curl -X PUT -H "Content-Type: application/json" \
--d '{"Id": 123,"Name": "sample string","Volume": 1}' \
+-d '{"Id": 123,"Volume": 1,"Name": "sample string"}' \
 http://localhost:4550/v1/devices/1234
 ```
 

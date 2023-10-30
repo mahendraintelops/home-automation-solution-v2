@@ -1,0 +1,31 @@
+
+# grpcurl commands for gRPC Server
+
+# Install grpcurl to access grpc services
+    go get github.com/fullstorydev/grpcurl/...
+    go install github.com/fullstorydev/grpcurl/cmd/grpcurl
+
+# To check the services available
+    grpcurl -plaintext localhost:25500 list
+
+# To check the rpc's available inside a specific service
+    grpcurl -plaintext localhost:25500 list pb.BasicService
+    # grpcurl -plaintext localhost:25500 list serviceName
+
+# To run a method from a service
+    grpcurl -plaintext localhost:25500 pb.BasicService/Create
+    # grpcurl -plaintext localhost:25500 serviceName/MethodName
+
+# To describe any service
+    grpcurl -plaintext -msg-template localhost:25500 describe pb.BasicService
+    # grpcurl -plaintext -msg-template localhost:25500 describe serviceName
+
+# To describe any method
+    grpcurl -plaintext -msg-template localhost:25500 describe pb.BasicService.Get
+    # grpcurl -plaintext -msg-template localhost:25500 describe serviceName.MethodName
+
+# To describe any Message
+    grpcurl -plaintext -msg-template localhost:25500 describe pb.MessageRequest
+    # grpcurl -plaintext -msg-template localhost:25500 describe MessageName
+
+
