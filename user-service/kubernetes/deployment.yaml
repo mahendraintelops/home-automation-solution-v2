@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: user-service
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+        name: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: mahendraintelops/home-automation-solution-v2/user-service
+          imagePullPolicy: Always
+        
+          ports:
+        
+          - containerPort: 25500
+            name: grpc
+        
+        
+        

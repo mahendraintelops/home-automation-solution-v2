@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package pb;
+option go_package="./api/v1;pb";
+
+service UserService {
+    rpc Ping (UserRequest) returns (UserResponse) {};
+    
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {};
+    
+    
+    rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {};
+    
+    
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {};
+    
+    
+    
+}
+
+message User {
+    string id = 1;
+    
+    string Name = 2;
+    
+}
+
+message CreateUserRequest {
+    User user = 1;
+}
+
+message CreateUserResponse {
+    string message = 1;
+}
+
+message GetUserRequest {
+    string id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message UpdateUserRequest {
+    string id = 1;
+    User user = 2;
+}
+
+message UpdateUserResponse {
+    string message = 1;
+}
+
+message DeleteUserRequest {
+    string id = 1;
+}
+
+message DeleteUserResponse {
+    string message = 1;
+}
+
+message ListUsersRequest {
+
+}
+
+message ListUsersResponse {
+    repeated User user = 1;
+}
+
+message UserRequest {}
+
+message UserResponse {
+    string message = 1; 
+}
