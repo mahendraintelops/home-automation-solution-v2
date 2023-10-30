@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: user-service
+  labels:
+    app: user-service
+  name: user-service
+spec:
+  ports:
+  
+    - protocol: TCP
+      port: 3581
+      targetPort: 3581
+   
+   
+    - protocol: TCP
+      port: 25500
+      targetPort: 25500
+   
+  selector:
+    app: user-service
+  type: ClusterIP
