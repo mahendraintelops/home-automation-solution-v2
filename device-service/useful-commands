@@ -7,7 +7,7 @@
 # Post
 ```
 curl -X POST -H "Content-Type: application/json" \
--d '{"Volume": 1,"Name": "sample string"}' \
+-d '{"Name": "sample string","Volume": 1}' \
 http://localhost:4550/v1/devices
 ```
 
