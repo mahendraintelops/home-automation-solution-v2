@@ -17,8 +17,8 @@ func migrateDevices(r *sqls.SQLiteClient) error {
 	CREATE TABLE IF NOT EXISTS devices(
 		Id INTEGER PRIMARY KEY AUTOINCREMENT,
         
-		Name TEXT NOT NULL,
 		Volume INTEGER NOT NULL,
+		Name TEXT NOT NULL,
         CONSTRAINT id_unique_key UNIQUE (Id)
 	)
 	`
@@ -41,8 +41,8 @@ func NewDeviceDao() (*DeviceDao, error) {
 }
 
 func (deviceDao *DeviceDao) CreateDevice(m *models.Device) (*models.Device, error) {
-	insertQuery := "INSERT INTO devices(Name, Volume)values(?, ?)"
-	res, err := deviceDao.sqlClient.DB.Exec(insertQuery, m.Name, m.Volume)
+	insertQuery := "INSERT INTO devices(Volume, Name)values(?, ?)"
+	res, err := deviceDao.sqlClient.DB.Exec(insertQuery, m.Volume, m.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (deviceDao *DeviceDao) ListDevices() ([]*models.Device, error) {
 	var devices []*models.Device
 	for rows.Next() {
 		m := models.Device{}
-		if err = rows.Scan(&m.Id, &m.Name, &m.Volume); err != nil {
+		if err = rows.Scan(&m.Id, &m.Volume, &m.Name); err != nil {
 			return nil, err
 		}
 		devices = append(devices, &m)
@@ -85,7 +85,7 @@ func (deviceDao *DeviceDao) GetDevice(id int64) (*models.Device, error) {
 	selectQuery := "SELECT * FROM devices WHERE Id = ?"
 	row := deviceDao.sqlClient.DB.QueryRow(selectQuery, id)
 	m := models.Device{}
-	if err := row.Scan(&m.Id, &m.Name, &m.Volume); err != nil {
+	if err := row.Scan(&m.Id, &m.Volume, &m.Name); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sqls.ErrNotExists
 		}
@@ -94,4 +94,37 @@ func (deviceDao *DeviceDao) GetDevice(id int64) (*models.Device, error) {
 
 	log.Debugf("device retrieved")
 	return &m, nil
+}
+
+func (deviceDao *DeviceDao) UpdateDevice(id int64, m *models.Device) (*models.Device, error) {
+	if id == 0 {
+		return nil, errors.New("invalid device ID")
+	}
+	if id != m.Id {
+		return nil, errors.New("id and payload don't match")
+	}
+
+	device, err := deviceDao.GetDevice(id)
+	if err != nil {
+		return nil, err
+	}
+	if device == nil {
+		return nil, sql.ErrNoRows
+	}
+
+	updateQuery := "UPDATE devices SET Volume = ?, Name = ? WHERE Id = ?"
+	res, err := deviceDao.sqlClient.DB.Exec(updateQuery, m.Volume, m.Name, id)
+	if err != nil {
+		return nil, err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if rowsAffected == 0 {
+		return nil, sqls.ErrUpdateFailed
+	}
+
+	log.Debugf("device updated")
+	return m, nil
 }

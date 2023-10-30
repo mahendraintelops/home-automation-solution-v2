@@ -30,3 +30,7 @@ func (deviceService *DeviceService) ListDevices() ([]*models.Device, error) {
 func (deviceService *DeviceService) GetDevice(id int64) (*models.Device, error) {
 	return deviceService.deviceDao.GetDevice(id)
 }
+
+func (deviceService *DeviceService) UpdateDevice(id int64, device *models.Device) (*models.Device, error) {
+	return deviceService.deviceDao.UpdateDevice(id, device)
+}

@@ -56,6 +56,8 @@ func main() {
 
 		v1.GET("/devices/:id", deviceController.FetchDevice)
 
+		v1.PUT("/devices/:id", deviceController.UpdateDevice)
+
 	}
 
 	Port := ":4550"
